@@ -1,5 +1,5 @@
 {
-    "name": "Slad/slad-booking-bundle",
+    "name": "slad/slad-booking-bundle",
     "type": "symfony-bundle",
     "keywords": ["booking", "availability", "calendar"],
     "homepage": "https://github.com/stephylee/SladBookingBundle.git",
