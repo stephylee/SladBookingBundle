@@ -44,12 +44,13 @@ class CalendarExtension extends \Twig_Extension
 
     /**
      * @param $item
+     * @param $route 
      * @param  string                    $start
      * @param  int                       $months
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderCalendar($item, $start = 'now', $months = 1)
+    public function renderCalendar($item, $route, $start = 'now', $months = 1)
     {
         if (intval($months) === 0) {
             throw new \InvalidArgumentException('Month number should be integer');
@@ -58,7 +59,8 @@ class CalendarExtension extends \Twig_Extension
         $end = new \DateTime();
         $end->add(new \DateInterval('P'.$months.'M'));
 
-        $bookings = $this->doctrine->getRepository($this->entity)
+        foreach ($items as $item) {
+            $bookings[$item->getId()] = $this->doctrine->getRepository($this->entity)
             ->createQueryBuilder('b')
             ->select('b')
             ->where('b.start >= :now')
@@ -69,16 +71,17 @@ class CalendarExtension extends \Twig_Extension
             ->setParameters(array(
                 'now' => $now,
                 'end' => $end,
-                'item'=> $item
+                'item'=> $item->getId()
             ))
             ->getQuery()
-            ->getResult();
-        ;
+            ->getResult();     
+        }
 
         return $this->environment->render('SladBookingBundle:Calendar:month.html.twig', array(
-            'bookings'=>$bookings,
-            'start' => $start,
-            'months'=>$months
+            'route'     => $route,
+            'bookings'  => $bookings,
+            'start'     => $start,
+            'months'    => $months
         ));
     }
 
