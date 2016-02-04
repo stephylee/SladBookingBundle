@@ -1,0 +1,13 @@
+parameters:
+  slad_booking.entity_class: ~
+
+services:
+  booker:
+    class: Slad\BookingBundle\Helper\Booker
+    arguments: [%slad_booking.entity_class%, @doctrine]
+
+  booking_calendar:
+    class: Slad\BookingBundle\Twig\CalendarExtension
+    arguments: [%slad_booking.entity_class%, @doctrine]
+    tags:
+      - {name: twig.extension}

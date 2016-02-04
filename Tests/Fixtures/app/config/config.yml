@@ -1,0 +1,36 @@
+parameters:
+  locale: en
+  secret: ThisTokenIsNotSoSecretChangeIt
+
+framework:
+  test: ~
+  templating: { engines: ['php', 'twig'] }
+  session:
+      storage_id: session.storage.mock_file
+
+  secret: %secret%
+  router: { resource: "%kernel.root_dir%/config/routing.yml" }
+  default_locale: %locale%
+
+doctrine:
+  dbal:
+      driver: pdo_mysql
+      host: 127.0.0.1
+      port: ~
+      dbname: sladbooking
+      user: travis
+      password: ~
+      charset: UTF8
+  orm:
+    auto_generate_proxy_classes: "%kernel.debug%"
+    auto_mapping: false
+    mappings:
+      default:
+        type: annotation
+        dir: %kernel.root_dir%/../ORM/Entity
+        alias: SladBookingBundle
+        prefix: Slad\BookingBundle\Tests\Fixtures\ORM\Entity
+        is_bundle: false
+
+slad_booking:
+  entity_class: Slad\BookingBundle\Tests\Fixtures\ORM\Entity\Booking
