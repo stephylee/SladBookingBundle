@@ -5,60 +5,68 @@
         {% else %}
             {% set month = (start | date) ~ " + "~(i-1)~"month" %}
         {% endif %}
-
         {% set days_current = month | date('t') %}
         {% set first_day = "1." ~ (month | date('F Y')) %}
         {% set last_day = days_current~"." ~ (month | date('F Y')) %}
         {% set start_day_of_current = first_day | date("N") %}
         {% set end_day_of_current = last_day | date("N") %}
-        <table class="cf-booking-calendar">
-            <tr class="cf-booking-calendar-m">
-                <th colspan="7">{{ month | date("F Y") }}</th>
+        <table class="table table-condensed table-bordered table-responsive">
+            <tr>
+                <th class="text-center" colspan="{{days_current+1}}">{{ month | date("M")|trans({}, 'SladBookingBundle')~' '~month | date("Y")}}</th>
             </tr>
             <tr>
-                <th class="cf-booking-calendar-dow">Mo</th>
-                <th class="cf-booking-calendar-dow">Tu</th>
-                <th class="cf-booking-calendar-dow">We</th>
-                <th class="cf-booking-calendar-dow">Th</th>
-                <th class="cf-booking-calendar-dow">Fr</th>
-                <th class="cf-booking-calendar-dow">Sa</th>
-                <th class="cf-booking-calendar-dow">Su</th>
-            </tr>
-            <tr>
-            {% for i in 1..days_current+start_day_of_current-1 %}
-                {% if loop.index < start_day_of_current %}
-                    <td class="cf-booking-calendar-empty"></td>
-                {% else %}
-
-                    {% set full_date = (loop.index - start_day_of_current + 1)~"."~month | date(" F Y") %}
-                    {% set booked = 0 %}
-                    {% set is_opener = 0 %}
-                    {% set is_closer = 0 %}
-                    {% for booking in bookings %}
-                        {% if full_date | date("U") >= booking.start | date("U") and full_date | date("U") <= booking.end | date("U") %}
-                            {% set booked = 1 %}
-                        {% endif %}
-                        {% if full_date | date("d F Y") == booking.start | date("d F Y") %}
-                            {% set is_opener = 1 %}
-                        {% endif %}
-                        {% if full_date | date("d F Y") == booking.end | date("d F Y") %}
-                            {% set is_closer = 1 %}
-                        {% endif %}
-                    {% endfor %}
-                    <td class="cf-booking-calendar-d{% if booked == 1 %} booked{% endif %}{% if is_opener == 1 %} opener{% endif %}{% if is_closer == 1 %} closer{% endif %}{% if full_date | date("U") < "now" | date("U") %} muted{% endif %}">{{ loop.index-start_day_of_current+1 }}</td>
-                    {% if loop.index%7 == 0 and loop.index < days_current+start_day_of_current-1 %}
-                        </tr>
-                        <tr>
-                    {% elseif loop.index == days_current+start_day_of_current - 1%}
-                         {% if end_day_of_current != 7 %}
-                             {% for j in 1..7-end_day_of_current %}
-                                 <td class="cf-booking-calendar-empty"></td>
-                             {% endfor %}
-                         {% endif %}
-                        </tr>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
+                <th class=""></th>
+                {% for i in 1..days_current %}
+                    <th class="">{{(month|date('Y')~'/'~month|date('n')~'/'~i)|date('D')|trans({}, 'SladBookingBundle')}}</th>
+                {% endfor %}
+            </tr>    
+            {% for item in items %}
+                <tr>
+                    <td>{{item.nom~'|'~item.plaque}}</td>
+                     {% if bookings[item.id]|length == 0 %}
+                        {% for i in 1..days_current %}
+                            <td class="success">{{i}}</td>
+                        {% endfor %}
+                    {% else %}
+                        {% set nb_bookings = bookings[item.id]|length %}
+                        {% set cb = 0 %}
+                        {% for i in 1..days_current %}
+                            {% set booked = 0 %}
+                            {% set is_opener = 0 %}
+                            {% set is_closer = 0 %}
+                            {% set start_previous = 0 %}
+                            {% set start_next = 0 %}
+                            {% set end_previous = 0 %}
+                            {% set end_next = 0 %}
+                            {% if cb < nb_bookings %}
+                                {% if cb > 0 and nb_bookings >1 %}
+                                    {% set start_previous = bookings[item.id][cb-1].start | date("d F Y") %}
+                                    {% set end_previous = bookings[item.id][cb-1].end | date("d F Y") %}
+                                {% endif %}
+                                {% if cb+1 < nb_bookings %}
+                                    {% set start_next = bookings[item.id][cb+1].start | date("d F Y") %}
+                                    {% set end_next = bookings[item.id][cb+1].end | date("d F Y") %}
+                                {% endif %}
+                                {% set full_date = (i)~"."~month | date(" F Y") %}
+                                {% if full_date | date("U") >= bookings[item.id][cb].start | date("U") and full_date | date("U") <= bookings[item.id][cb].end | date("U") %}
+                                    {% set booked = 1 %} 
+                                {% endif %}
+                                {% if full_date | date("d F Y") == bookings[item.id][cb].start | date("d F Y") %}
+                                    {% set is_opener = 1 %}
+                                {% endif %}
+                                {% if full_date | date("d F Y") == bookings[item.id][cb].end | date("d F Y") %}
+                                    {% set is_closer = 1 %}
+                                    {% set cb = cb + 1 %}
+                                    {% if start_next|date('U') > 0 and bookings[item.id][cb].end | date("d F Y") == start_next and bookings[item.id][cb].end | date("d F Y") == end_next %}
+                                        {% set cb = cb + 1 %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                            <td class="{% if is_opener == 1 %}warning{% elseif is_closer == 1 %}warning{% elseif booked == 1 %}danger{% elseif booked == 0 %}success{% endif %}">{{i}}</td>
+                        {% endfor %} 
+                    {% endif %}                    
+                </tr>
+            {%endfor %}          
         </table>
     {% endfor %}
 {% endspaceless %}
