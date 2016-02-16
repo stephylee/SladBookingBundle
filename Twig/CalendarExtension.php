@@ -88,9 +88,11 @@ class CalendarExtension extends \Twig_Extension
     /**
      * @param $date
      * @param $item
-     * @param $precision        
+     * @param $precision 
+     * @param $route_new
+     * @param $route_show 
      */
-    public function renderDay($date,$item,$precision)
+    public function renderDay($date,$item,$precision,$route_new,$route_show)
     {
 
         $start  = new \DateTime($date);
@@ -107,7 +109,9 @@ class CalendarExtension extends \Twig_Extension
         ->setParameters(array(
             'start'     => $start,
             'end'       => $end,
-            'item'      => $item
+            'item'      => $item,
+            'route_new'       => $route_new,
+            'route_show'      => $route_show
         ))
         ->getQuery()
         ->getResult(); 
