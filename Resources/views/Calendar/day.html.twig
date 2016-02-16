@@ -54,9 +54,9 @@
                 <td  class=" text-center {% if booked == 1 %}danger{% else %}success{% endif %}">
                     
                     <form   action="{% if booked == 1 %}
-                                        {{ path('booking_show', {'id': bookings[cb].id}) }}
+                                        {{ path(route_show, {'id': bookings[cb].id}) }}
                                     {% else %}
-                                        {{ path('booking_new') }}
+                                        {{ path(route_new) }}
                                     {% endif %}" 
                             method="post">
                         {% if booked == 1 %}
