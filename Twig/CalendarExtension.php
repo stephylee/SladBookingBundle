@@ -45,13 +45,12 @@ class CalendarExtension extends \Twig_Extension
 
     /**
      * @param $items
-     * @param $route 
      * @param  string                    $start
      * @param  int                       $months
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderCalendar($items, $route, $start = 'now', $months = 1)
+    public function renderCalendar($items, $start = 'now', $months = 1)
     {
         if (intval($months) === 0) {
             throw new \InvalidArgumentException('Month number should be integer');
@@ -79,7 +78,6 @@ class CalendarExtension extends \Twig_Extension
         }
 
         return $this->environment->render('SladBookingBundle:Calendar:month.html.twig', array(
-            'route'     => $route,
             'bookings'  => $bookings,
             'items'     => $items,
             'start'     => $start,
