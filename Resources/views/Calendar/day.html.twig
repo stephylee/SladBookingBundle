@@ -1,0 +1,89 @@
+{% spaceless %}
+
+<table class='table table-condensed table-bordered'>
+    <tr>
+        <th colspan="{{60/precision+1}}">
+            {{ 'item '|trans({}, 'SladBookingBundle')~item.nom~' | '~item.plaque}}
+        </th>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <center>00</center>
+        </td>
+        {% for m in 1..(60/precision-1) %}						
+            {% set minute = m*precision %}
+            <td>
+                <center>{{ minute }}</center>
+            </td>
+        {% endfor %}
+    </tr>
+     
+    {% set nb_bookings = bookings|length %}
+    {% set cb = 0 %}
+    {% for i in 0..23 %}
+        <tr>
+            <th>
+                {% if i|length <2 %}
+                    0{{i}}
+                {% else %}
+                    {{i}}
+                {% endif %}
+            </th>
+
+            {% for m in 1..(60/precision)  %}
+                
+                {% set booked = 0 %}
+
+                {% set start = date|date_modify('+'~i~' hour')|date_modify('+'~(m-1)*precision~' minute')|date('U') %}
+                {% if loop.last %}
+                    {% set end = date|date_modify('+'~(i+1)~' hour')|date_modify('+'~(0)*precision~' minute')|date('U') %}
+                {% else %}
+                    {% set end = date|date_modify('+'~i~' hour')|date_modify('+'~(m)*precision~' minute')|date('U') %}
+                {% endif %}
+                    
+                {% if cb < nb_bookings %}
+                    {% set start_b = bookings[cb].start | date("U") %}
+                    {% set end_b = bookings[cb].end | date("U") %}
+                    {% if   (start_b >= start and start_b < end) or
+                            (end_b > start and end_b <= end) or
+                            (start_b < start and end_b > end)
+                    %}
+                        {% set booked = 1 %}
+                        {% if end_b > start and end_b <= end and cb+1 < nb_bookings %}
+                            {%set cb = cb + 1 %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+
+                <td  class=" text-center {% if booked == 1 %}danger{% else %}success{% endif %}">
+                    
+                    <form   action="{% if booked == 1 %}
+                                        {{ path('booking_show', {'id': bookings[cb].id}) }}
+                                    {% else %}
+                                        {{ path('booking_new') }}
+                                    {% endif %}" 
+                            method="post">
+                        {% if booked == 1 %}
+                            <input type="hidden" name="id" value="{{bookings[cb].id}}"></input>
+                        {% else %}
+                            <input type="hidden" name="produit" value="{{item.id}}"></input>
+                            <input type="hidden" name="start" value="{{start|date('Y/m/d H:i')}}"></input>
+                        {% endif %}
+                 
+                        <input  type="submit" 
+                                class=" btn btn-xs btn-primary" 
+                                value="{{date|date_modify('+'~i~' hour')|date_modify('+'~(m-1)*precision~' minute')|date('H:i')}}"
+                                >
+                        </input>
+                        
+                    </form>
+                </td>
+                
+            {% endfor %} 
+
+        </tr>
+    {% endfor %}
+</table>
+
+{% endspaceless %}
