@@ -38,7 +38,8 @@ class CalendarExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('slad_booking_calendar', array($this, 'renderCalendar'), array('is_safe'=>array('html')))
+            new \Twig_SimpleFunction('slad_booking_calendar', array($this, 'renderCalendar'), array('is_safe'=>array('html'))),
+            new \Twig_SimpleFunction('slad_booking_day', array($this, 'renderDay'), array('is_safe'=>array('html')))
         );
     }
 
@@ -86,6 +87,41 @@ class CalendarExtension extends \Twig_Extension
         ));
     }
 
+    /**
+     * @param $date
+     * @param $item
+     * @param $precision        
+     */
+    public function renderDay($date,$item,$precision)
+    {
+
+        $start  = new \DateTime($date);
+        $end    = (new \DateTime($date))->modify('+1 day');
+
+        $bookings = $this->doctrine->getRepository($this->entity)
+        ->createQueryBuilder('b')
+        ->select('b')
+        ->where('b.start <= :start and b.end >= :end')
+        ->orwhere('b.end >= :start and b.end <= :end')
+        ->orwhere('b.start >= :start and b.start <= :end')
+        ->andWhere('b.item = :item')
+        ->orderBy('b.start', 'ASC')
+        ->setParameters(array(
+            'start'     => $start,
+            'end'       => $end,
+            'item'      => $item
+        ))
+        ->getQuery()
+        ->getResult(); 
+
+        return $this->environment->render('SladBookingBundle:Calendar:day.html.twig', array(
+            'date'        => new \DateTime($date),
+            'item'        => $item,
+            'bookings'    => $bookings,
+            'precision'   => $precision
+        ));
+    }
+    
     public function initRuntime(\Twig_Environment $environment)
     {
         $this->environment = $environment;
