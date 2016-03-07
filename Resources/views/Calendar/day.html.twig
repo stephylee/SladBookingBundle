@@ -62,7 +62,7 @@
                         {% if booked == 1 %}
                             <input type="hidden" name="id" value="{{bookings[cb].id}}"></input>
                         {% else %}
-                            <input type="hidden" name="room" value="{{item.id}}"></input>
+                            <input type="hidden" name="{{class(item)}}" value="{{item.id}}"></input>
                             <input type="hidden" name="start" value="{{start|date('Y/m/d H:i')}}"></input>
                         {% endif %}
                  
