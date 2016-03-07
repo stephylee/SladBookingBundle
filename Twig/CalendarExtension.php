@@ -65,7 +65,7 @@ class CalendarExtension extends \Twig_Extension
             ->andWhere('b.item = :item')
             ->orderBy('b.start', 'ASC')
             ->setParameters(array(
-                'now' => $now,
+                'start' => $now,
                 'end' => $end,
                 'item'=> $item->getId()
             ))
