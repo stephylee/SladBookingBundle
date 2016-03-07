@@ -11,3 +11,8 @@ services:
     arguments: [%slad_booking.entity_class%, @doctrine]
     tags:
       - {name: twig.extension}
+
+  class_twig:
+    class: Slad\BookingBundle\Twig\ClassTwigExtension
+    tags:
+      - {name: twig.extension}
