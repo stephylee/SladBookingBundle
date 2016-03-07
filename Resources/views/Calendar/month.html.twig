@@ -20,7 +20,12 @@
                 <tr>
                     <td>{{item.name}}</td>
 
-                    {% set nb_bookings = bookings[item.id]|length %}
+                    {{% if bookings is defined %}
+                        {% set nb_bookings = bookings[item.id]|length %}
+                    {% else %}
+                        {% set nb_bookings = 0 %}
+                    {% endif %}
+                    
                     {% set cb = 0 %}
 
                     {% for i in 1..days_current %}
