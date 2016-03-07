@@ -54,7 +54,6 @@ class CalendarExtension extends \Twig_Extension
     {
         $now = new \DateTime($start);
         $end    = (new \DateTime($start))->modify('+1 month');
-        $end->add(new \DateInterval('P'.$months.'M'));
 
         foreach ($items as $item) {
             $bookings[$item->getId()] = $this->doctrine->getRepository($this->entity)
@@ -105,9 +104,7 @@ class CalendarExtension extends \Twig_Extension
         ->setParameters(array(
             'start'     => $start,
             'end'       => $end,
-            'item'      => $item,
-            'route_new'       => $route_new,
-            'route_show'      => $route_show
+            'item'      => $item
         ))
         ->getQuery()
         ->getResult(); 
@@ -116,7 +113,9 @@ class CalendarExtension extends \Twig_Extension
             'date'        => new \DateTime($date),
             'item'        => $item,
             'bookings'    => $bookings,
-            'precision'   => $precision
+            'precision'   => $precision,
+            'route_new'       => $route_new,
+            'route_show'      => $route_show
         ));
     }
     
