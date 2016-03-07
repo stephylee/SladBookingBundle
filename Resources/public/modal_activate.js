@@ -28,7 +28,8 @@
                    alert('error');  // messsage a personnaliser
                }
             });
-            modal.find('#dayModalLabel').text('translations.bookday' + result[0]);
+            var mes = Translator.trans('booking_date', {}, 'SladBookingBundle');
+            modal.find('#dayModalLabel').text(mes + ' ' + result[0]);
         });
 
 })(jQuery);
