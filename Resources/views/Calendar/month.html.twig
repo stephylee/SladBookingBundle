@@ -20,7 +20,7 @@
                 <tr>
                     <td>{{item.name}}</td>
 
-                    {{% if bookings is defined %}
+                    {% if bookings is defined %}
                         {% set nb_bookings = bookings[item.id]|length %}
                     {% else %}
                         {% set nb_bookings = 0 %}
