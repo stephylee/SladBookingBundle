@@ -55,6 +55,8 @@ class CalendarExtension extends \Twig_Extension
         $now = new \DateTime($start);
         $end    = (new \DateTime($start))->modify('+1 month');
 
+        $bookings = array();
+        
         foreach ($items as $item) {
             $bookings[$item->getId()] = $this->doctrine->getRepository($this->entity)
             ->createQueryBuilder('b')
