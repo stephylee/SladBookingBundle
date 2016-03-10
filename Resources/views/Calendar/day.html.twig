@@ -67,7 +67,7 @@
                         {% endif %}
                  
                         <input  type="submit" 
-                                class=" btn btn-xs btn-primary" 
+                                class=" btn btn-xs btn-{% if booked == 1 %}danger{% else %}success{% endif %}" 
                                 value="{{date|date_modify('+'~i~' hour')|date_modify('+'~(m-1)*precision~' minute')|date('H:i')}}"
                                 >
                         </input>
