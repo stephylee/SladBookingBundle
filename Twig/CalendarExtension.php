@@ -50,7 +50,7 @@ class CalendarExtension extends \Twig_Extension
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function renderCalendar($items, $start = 'now')
+    public function renderCalendar($items, $start = 'now', $form, $route)
     {
         $now = new \DateTime($start);
         $end    = (new \DateTime($start))->modify('+1 month');
@@ -76,9 +76,11 @@ class CalendarExtension extends \Twig_Extension
         }
 
         return $this->environment->render('SladBookingBundle:Calendar:month.html.twig', array(
-            'bookings'  => $bookings,
-            'items'     => $items,
-            'start'     => $start
+            'bookings'      => $bookings,
+            'items'         => $items,
+            'start'         => $start,,
+            'form'          => $form,
+            'route_index'   => $route
         ));
     }
 
