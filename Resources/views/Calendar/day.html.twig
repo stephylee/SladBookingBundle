@@ -63,6 +63,7 @@
                             <input type="hidden" name="id" value="{{bookings[cb].id}}"></input>
                         {% else %}
                             <input type="hidden" name="{{class(item)|lower}}" value="{{item.id}}"></input>
+                            <input type="hidden" name="{{class(project)|lower}}" value="{{project.id}}"></input>
                             <input type="hidden" name="start" value="{{start|date('Y/m/d H:i')}}"></input>
                         {% endif %}
                  
