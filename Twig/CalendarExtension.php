@@ -90,7 +90,7 @@ class CalendarExtension extends \Twig_Extension
      * @param $route_new
      * @param $route_show 
      */
-    public function renderDay($date,$item,$precision,$route_new,$route_show)
+    public function renderDay($date,$item,$project,$precision,$route_new,$route_show)
     {
 
         $start  = new \DateTime($date);
@@ -115,6 +115,7 @@ class CalendarExtension extends \Twig_Extension
         return $this->environment->render('SladBookingBundle:Calendar:day.html.twig', array(
             'date'        => new \DateTime($date),
             'item'        => $item,
+            'project'     => $project,
             'bookings'    => $bookings,
             'precision'   => $precision,
             'route_new'       => $route_new,
