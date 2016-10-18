@@ -88,7 +88,7 @@
                                     class="btn btn-xs btn-{% if nb_booked == 1 and is_partial == 0 %}danger{% endif %}{% if is_partial == 1 %}warning{% endif %}{% if nb_booked == 0 %}success{% endif %}" 
                                     data-toggle="modal" 
                                     data-target="#dayModal" 
-                                    data-whatever="{{start|date('Y/m/d')}}--{{item.id}}">
+                                    data-whatever="{{start|date('Y/m/d')}}--{{item.id}}--{{project.id}}">
                                 {{i}}
                             </button>
                         </td>    
