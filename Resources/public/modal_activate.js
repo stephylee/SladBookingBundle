@@ -17,7 +17,8 @@
             $.ajax({
                 type : 'POST',
                 data : { date: result[0], 
-                         item: result[1]
+                         item: result[1],
+                         project: result[2]
                          },
                 url : url,
                success : function(code_html, statut){ 
