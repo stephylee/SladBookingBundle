@@ -61,6 +61,8 @@
                     {% set cb = 0 %}
 
                     {% for i in 1..days_current %}
+                    
+                        {% set date_of_the_day = month|date('Y')~'/'~month|date('n')~'/'~i %}
 
                         {% set nb_booked = 0 %}
                         {% set is_partial = 0 %}
